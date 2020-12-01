@@ -7,4 +7,9 @@
         tools:context=".SettingsActivity"
         android:background="#5E5E5E">
 
+    <WebView
+            android:id="@+id/privacy_policy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

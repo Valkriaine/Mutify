@@ -2559,6 +2559,7 @@ id popRight
 id popUp
 id position
 id postLayout
+id privacy_policy
 id progress_bar
 id progress_circular
 id progress_horizontal

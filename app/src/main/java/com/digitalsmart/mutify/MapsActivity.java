@@ -291,6 +291,7 @@ public class MapsActivity extends FragmentActivity implements
     public void launchSettings(View view)
     {
         Intent intent = new Intent(this, SettingsActivity.class);
+        binding.blurLayer.disable();
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         startActivity(intent);
     }

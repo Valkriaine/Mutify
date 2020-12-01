@@ -31,7 +31,7 @@
     <string name="dwelling_info">Mutify will trigger when the Android system detects that you have stayed in the area
         for a short while. You can set up the delay below:
     </string>
-    <string name="settings">settings</string>
+    <string name="settings">Privacy Policy</string>
     <string name="prominent_disclosure">Mutify needs to access your location information in order to determine whether or not you are in a do-not-disturb area. Please allow access to location all the time.
         \nMutify will be able to collect your location information, and access your device\u0027s do-not-disturb settings.
     </string>

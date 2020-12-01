@@ -444,6 +444,7 @@
                                 android:layout_height="wrap_content"
                                 android:background="#00FFFFFF"
                                 android:height="20dp"
+                                android:paddingHorizontal="10dp"
                                 android:textColor="@color/quantum_white_100"
                                 android:text="@string/settings"
                                 android:onClick="launchSettings"/>
