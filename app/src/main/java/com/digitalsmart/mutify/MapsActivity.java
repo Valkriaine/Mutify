@@ -298,6 +298,11 @@ public class MapsActivity extends FragmentActivity implements
     protected void onStart()
     {
         super.onStart();
+
+        binding.privacyPolicyPage.setVisibility(View.GONE);
+        binding.drawer.setTouchEnabled(true);
+        binding.addTile.setOnClickListener(addTileOnClickListener);
+
         blurController.setFromBackPress(true);
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         if (isDNDAccessRequested())
@@ -310,6 +315,11 @@ public class MapsActivity extends FragmentActivity implements
     protected void onResume()
     {
         super.onResume();
+
+        binding.privacyPolicyPage.setVisibility(View.GONE);
+        binding.drawer.setTouchEnabled(true);
+        binding.addTile.setOnClickListener(addTileOnClickListener);
+
         blurController.setFromBackPress(true);
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         if (isDNDAccessRequested())
