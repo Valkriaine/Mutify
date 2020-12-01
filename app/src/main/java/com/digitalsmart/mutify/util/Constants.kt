@@ -15,12 +15,7 @@ object Constants {
     const val LOCATION_DATA_EXTRA = "$PACKAGE_NAME.LOCATION_DATA_EXTRA"
 
     //PermissionManager
-    const val COARSE_LOCATION_REQUEST_CODE = 5556
-    const val FINE_LOCATION_REQUEST_CODE = 5557
-    const val BACKGROUND_LOCATION_REQUEST_CODE = 5558
-    const val LOCATION_REQUEST_REJECTED = 6555
-    const val BACKGROUND_LOCATION_REQUEST_REJECTED = 8555
-    const val REQUEST_GRANTED = 1000
+    const val LOCATION_REQUEST_CODE = 5556
 
     //NotificationManager
     const val NOTIFICATION_ID = 0

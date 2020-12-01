@@ -1,7 +1,9 @@
 package com.digitalsmart.mutify;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Rect;
@@ -22,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
@@ -58,15 +61,22 @@ import com.yanzhenjie.recyclerview.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import nl.bryanderidder.themedtogglebuttongroup.ThemedButton;
 import org.jetbrains.annotations.NotNull;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.digitalsmart.mutify.util.Constants.*;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
+        LocationListener,
+        EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks
 {
     private GoogleMap map;
     private LatLng currentLatLng;
@@ -93,10 +103,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final float[] radiusSliderPosition = {0f};
     private final float[] delaySliderPosition = {0f};
     private boolean radiusHasText = false;
-
+    private String[] locationPermissions;
 
     //data binding object from activity_maps.xml
     private ActivityMapsBinding binding;
+
 
     //receive Geocoder fetch address result
     private class AddressResultReceiver extends ResultReceiver
@@ -133,14 +144,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //initialize data binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
 
-        MobileAds.initialize(this, initializationStatus -> {});
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
+        else
+            locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
+        //initialize Google Ads
+        MobileAds.initialize(this, initializationStatus -> {});
         AdRequest adRequest = new AdRequest.Builder().build();
         binding.adView.loadAd(adRequest);
 
-        //check permission
-        permissionManager = new PermissionManager(this);
-        permissionManager.checkPermission();
+        if (isFirstTime())
+        {
+            AlertDialog permissionDialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert).create();
+            permissionDialog.setMessage(getString(R.string.prominent_disclosure));
+            permissionDialog.show();
+            permissionDialog.setCanceledOnTouchOutside(true);
+            permissionDialog.setOnCancelListener(dialog -> new PermissionManager(this, locationPermissions).checkPermission());
+        }
+        else
+        {
+            //check permission
+            permissionManager = new PermissionManager(this, locationPermissions);
+            permissionManager.checkPermission();
+            permissionManager.checkDNDAccess();
+        }
+
 
         //register Geocoder intent listener
         addressResultReceiver = new AddressResultReceiver(new Handler(Looper.getMainLooper()));
@@ -156,10 +185,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-
         //retrieve user's current location at app launch
         getCurrentLocation(null);
-
         //startPeriodicWork();
     }
 
@@ -170,14 +197,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //call this method to manually get the user's current location
     public void getCurrentLocation(View view)
     {
+        if (permissionManager != null)
+            permissionManager.checkPermission();
+
         if (fusedLocationProviderClient != null)
         {
             //if the app just launched and this method is being called in onCreate, get the last known location
             //to avoid delay
             if (isFromLaunch)
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-                    if (location != null) {
-
+                    if (location != null)
+                    {
                         currentLocation = location;
                         currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
@@ -187,13 +217,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             else
                 fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
                         .addOnSuccessListener(this, location -> {
-                            if (location != null) {
+                            if (location != null)
+                            {
                                 currentLocation = location;
                                 currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
                             }
                         });
-        }
+            }
     }
 
     //open the bottom drawer and slide to the RecyclerView page
@@ -207,48 +238,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //open the bottom drawer and slide to the edit page
     public void addButtonClicked(View view)
     {
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
+        permissionManager.checkPermission();
+
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         binding.homePager.setCurrentItem(0, true);
         binding.radiusSlider.setPosition(80f/500);
         binding.delaySlider.setPosition(0.5f);
         binding.addName.setText("Location " + (userDataManager.getAdapter().getItemCount() + 1));
         binding.transitionType.selectButton(R.id.entering);
-        permissionManager.checkPermission();
         if (blurController != null)
             blurController.setAddButtonClicked(true);
     }
 
     public void confirmButtonClicked(View view)
     {
-        //add the current marker location to the list
-
-        //retrieve radius from the UI controls
-        //do nothing if there is no marked user location
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
         permissionManager.checkPermission();
-        if (markerUserLocation != null)
+        if (permissionManager.checkDNDAccess())
         {
-            markerUserLocation.setRadius(Float.parseFloat(String.valueOf(binding.radius.getText())));
-            if (String.valueOf(binding.addName.getText()).isEmpty())
-                markerUserLocation.setName("Location " + (userDataManager.getAdapter().getItemCount() + 1));
-            else
-                markerUserLocation.setName(String.valueOf(binding.addName.getText()));
-
-            //set transition type
-            if (binding.dwelling.isSelected())
+            if (markerUserLocation != null)
             {
-                markerUserLocation.setTransition(Geofence.GEOFENCE_TRANSITION_DWELL);
-                int delay = Integer.parseInt(Objects.requireNonNull(binding.delaySlider.getBubbleText()));
-                markerUserLocation.setDelay(delay * 60000);
+                markerUserLocation.setRadius(Float.parseFloat(String.valueOf(binding.radius.getText())));
+                if (String.valueOf(binding.addName.getText()).isEmpty())
+                    markerUserLocation.setName("Location " + (userDataManager.getAdapter().getItemCount() + 1));
+                else
+                    markerUserLocation.setName(String.valueOf(binding.addName.getText()));
+
+                //set transition type
+                if (binding.dwelling.isSelected())
+                {
+                    markerUserLocation.setTransition(Geofence.GEOFENCE_TRANSITION_DWELL);
+                    int delay = Integer.parseInt(Objects.requireNonNull(binding.delaySlider.getBubbleText()));
+                    markerUserLocation.setDelay(delay * 60000);
+                }
+                else if (binding.entering.isSelected())
+                {
+                    markerUserLocation.setTransition(Geofence.GEOFENCE_TRANSITION_ENTER);
+                }
+
+
+
+                userDataManager.add(markerUserLocation);
+                binding.homePager.setCurrentItem(1, true);
             }
-            else if (binding.entering.isSelected())
-            {
-                markerUserLocation.setTransition(Geofence.GEOFENCE_TRANSITION_ENTER);
-            }
-
-
-
-            userDataManager.add(markerUserLocation);
-            binding.homePager.setCurrentItem(1, true);
         }
     }
 
@@ -259,7 +294,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         startActivity(intent);
     }
-
 
 
 
@@ -279,18 +313,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStart()
     {
         super.onStart();
-        permissionManager.checkPermission();
         binding.blurLayer.disable();
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (isDNDAccessRequested())
+            new PermissionManager(this, locationPermissions).checkDNDAccess();
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        permissionManager.checkPermission();
         binding.blurLayer.disable();
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (isDNDAccessRequested())
+            new PermissionManager(this, locationPermissions).checkDNDAccess();
+
     }
 
 
@@ -311,7 +348,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //called when the location service provider is disabled
     @Override
-    public void onProviderDisabled(@NonNull String provider) {
+    public void onProviderDisabled(@NonNull String provider)
+    {
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
         permissionManager.onProviderDisabled();
     }
 
@@ -319,6 +359,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onProviderEnabled(@NonNull String provider)
     {
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
         permissionManager.onProviderEnabled();
         getCurrentLocation(null);
     }
@@ -328,26 +370,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        int result = permissionManager.onRequestPermissionsResult(requestCode, grantResults);
-        if (result == REQUEST_GRANTED)
-        {
-            getCurrentLocation(null);
-            return;
-        }
-        if (result == LOCATION_REQUEST_REJECTED)
-        {
-            Toast.makeText(this.getApplicationContext(),
-                    R.string.notify_permission,
-                    Toast.LENGTH_SHORT)
-                    .show();
-        }
-        if (result == BACKGROUND_LOCATION_REQUEST_REJECTED)
-        {
-            Toast.makeText(this.getApplicationContext(),
-                    R.string.background_location_permission,
-                    Toast.LENGTH_SHORT)
-                    .show();
-        }
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
+        permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 
     @Override
@@ -380,6 +406,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             super.onBackPressed();
 
         blurController.setFromBackPress(false);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull @NotNull List<String> perms)
+    {
+        //retrieve user's current location at app launch
+        getCurrentLocation(null);
+
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
+
+        if (EasyPermissions.hasPermissions(this, locationPermissions))
+            permissionManager.checkDNDAccess();
+        else
+            permissionManager.checkPermission();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull @NotNull List<String> perms)
+    {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms))
+        {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+        else
+        {
+            if (permissionManager == null)
+                permissionManager = new PermissionManager(this, locationPermissions);
+            permissionManager.checkPermission();
+        }
+    }
+
+    @Override
+    public void onRationaleAccepted(int requestCode)
+    {
+        if (permissionManager == null)
+            permissionManager = new PermissionManager(this, locationPermissions);
+        permissionManager.checkPermission();
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode)
+    {
+        //exit the app
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
     }
 
     //add other methods here
@@ -655,6 +729,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (binding.drawer.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
                 balloon.dismiss();
         }
+    }
+
+    //check if first time launch
+    private boolean isFirstTime()
+    {
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        boolean ranBefore = preferences.getBoolean(PACKAGE_NAME + "_RanBefore", false);
+        if (!ranBefore)
+        {
+            // first time
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(PACKAGE_NAME + "_RanBefore", true);
+            editor.commit();
+        }
+        return !ranBefore;
+    }
+
+    //check if DND access has been requested
+    private boolean isDNDAccessRequested()
+    {
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        return preferences.getBoolean(PACKAGE_NAME + "_DND_Requested", false);
     }
 
 

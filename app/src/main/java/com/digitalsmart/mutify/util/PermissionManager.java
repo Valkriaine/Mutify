@@ -1,22 +1,23 @@
 package com.digitalsmart.mutify.util;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import com.digitalsmart.mutify.MapsActivity;
 import com.digitalsmart.mutify.R;
 import org.jetbrains.annotations.NotNull;
+import pub.devrel.easypermissions.EasyPermissions;
+import pub.devrel.easypermissions.PermissionRequest;
 
-import static com.digitalsmart.mutify.util.Constants.*;
+import static com.digitalsmart.mutify.util.Constants.LOCATION_REQUEST_CODE;
+import static com.digitalsmart.mutify.util.Constants.PACKAGE_NAME;
 
 
 //manages all location related operations, including permission requests
@@ -24,17 +25,15 @@ public class PermissionManager
 {
     private final MapsActivity mapsActivity;
     private LocationManager locationManager;
-    private int requestCount = 0;
-    private AlertDialog alertDialog;
-
-
-
+    private AlertDialog dndDialog;
+    private final String[] locationPermissions;
 
     //constructor
-    public PermissionManager(MapsActivity activity)
+    public PermissionManager(MapsActivity activity, String[] locationPermissions)
     {
         mapsActivity = activity;
         checkPermissionAndService();
+        this.locationPermissions = locationPermissions;
     }
 
     //check permission and location service availability
@@ -89,75 +88,79 @@ public class PermissionManager
                     .show();
     }
 
-    //todo: request count >= 4 condition is never met, need fix
     //listen for permission request result
-    public int onRequestPermissionsResult(int requestCode, @NonNull @NotNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults)
     {
-        if (requestCount >= 4)
-            return REQUEST_GRANTED;
-        switch (requestCode) {
-            case FINE_LOCATION_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    requestCount++;
-                    return LOCATION_REQUEST_REJECTED;
-                }
-            case COARSE_LOCATION_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    requestCount++;
-                    return LOCATION_REQUEST_REJECTED;
-                }
-            case BACKGROUND_LOCATION_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED  && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    requestCount++;
-                    return BACKGROUND_LOCATION_REQUEST_REJECTED;
-                }
-            default:
-                return REQUEST_GRANTED;
-        }
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, mapsActivity);
     }
 
     //check and ask for permissions
     public void checkPermission()
     {
-        NotificationManager n = (NotificationManager) mapsActivity.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if(!n.isNotificationPolicyAccessGranted())
+        if (!EasyPermissions.hasPermissions(mapsActivity, locationPermissions))
         {
-            if (alertDialog == null || !alertDialog.isShowing())
+            EasyPermissions.requestPermissions(
+                    new PermissionRequest.Builder(mapsActivity, LOCATION_REQUEST_CODE, locationPermissions)
+                            .setRationale(R.string.notify_permission)
+                            .setPositiveButtonText("Okay")
+                            .setNegativeButtonText("Cancel")
+                            .setTheme(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                            .build());
+
+        }
+    }
+
+    public boolean checkDNDAccess()
+    {
+        if(!canAccessDND())
+        {
+            if (dndDialog == null || !dndDialog.isShowing())
             {
-                alertDialog = new AlertDialog.Builder(mapsActivity).create();
-                alertDialog.setMessage("Please allow Mutify to modify do not disturb.");
-                alertDialog.show();
-                alertDialog.setCanceledOnTouchOutside(true);
-                alertDialog.setOnCancelListener(dialog -> {
-                    if(!n.isNotificationPolicyAccessGranted())
+                dndDialog = new AlertDialog.Builder(mapsActivity, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                        .setNegativeButton("Take me there", (dialogInterface, i) -> dndDialog.cancel())
+                        .create();
+                dndDialog.setMessage("Please allow Mutify to modify do not disturb settings.");
+                dndDialog.show();
+                dndDialog.setCanceledOnTouchOutside(false);
+
+                dndDialog.setOnCancelListener(dialog -> {
+                    if(!canAccessDND())
                     {
+                        SharedPreferences.Editor editor = mapsActivity.getPreferences(Context.MODE_PRIVATE).edit();
+                        editor.putBoolean(PACKAGE_NAME + "_DND_Requested", true);
+                        editor.commit();
                         mapsActivity.startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
                     }
                     else
                     {
-                        alertDialog.cancel();
+                        dndDialog.cancel();
                     }
                 });
             }
         }
-        if (ContextCompat.checkSelfPermission(mapsActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        else
         {
-            Toast.makeText(mapsActivity.getApplicationContext(),
-                    R.string.notify_permission,
-                    Toast.LENGTH_SHORT)
-                    .show();
-            mapsActivity.requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, FINE_LOCATION_REQUEST_CODE);
+            if (dndDialog != null)
+                dndDialog.cancel();
         }
-        if (ContextCompat.checkSelfPermission(mapsActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+
+        return canAccessDND();
+    }
+
+    private boolean canAccessDND()
+    {
+        NotificationManager n = (NotificationManager) mapsActivity.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (n.isNotificationPolicyAccessGranted())
         {
-            mapsActivity.requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, COARSE_LOCATION_REQUEST_CODE);
+            SharedPreferences.Editor editor = mapsActivity.getPreferences(Context.MODE_PRIVATE).edit();
+            editor.putBoolean(PACKAGE_NAME + "_DND_Requested", false);
+            editor.commit();
+            if (dndDialog != null)
+                dndDialog.cancel();
+
         }
-        if (ContextCompat.checkSelfPermission(mapsActivity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
-            mapsActivity.requestPermissions(new String[] { Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_LOCATION_REQUEST_CODE);
-        }
+
+        return n.isNotificationPolicyAccessGranted();
     }
 }

@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Mutify</string>
     <string name="map_marker">Map Marker</string>
     <string name="notify_location_service">\"Please turn on location service for Mutify to work properly. \"</string>
-    <string name="notify_permission">Mutify requires permission to access your location in order to work properly.
+    <string name="notify_permission">Mutify needs to access your location in the background in order to work properly. Please allow access to location all the time.
     </string>
     <string name="add_new_location">Confirm</string>
     <string name="saved_locations">Menu</string>
@@ -32,4 +32,7 @@
         for a short while. You can set up the delay below:
     </string>
     <string name="settings">settings</string>
+    <string name="prominent_disclosure">Mutify needs to access your location information in order to determine whether or not you are in a do-not-disturb area. Please allow access to location all the time.
+        \nMutify will be able to collect your location information, and access your device\u0027s do-not-disturb settings.
+    </string>
 </resources>

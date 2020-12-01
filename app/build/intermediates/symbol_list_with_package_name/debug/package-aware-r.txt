@@ -3019,7 +3019,10 @@ string places_powered_by_google
 string places_search_error
 string places_try_again
 string preference_copied
+string prominent_disclosure
 string radius_hint
+string rationale_ask
+string rationale_ask_again
 string reset_camera
 string s1
 string s2
@@ -3035,6 +3038,7 @@ string settings
 string status_bar_notification_info_overflow
 string summary_collapsed_preference_list
 string title_activity_maps
+string title_settings_dialog
 string transition_type
 string transition_type_placeholder
 string unit_meter
@@ -3265,6 +3269,8 @@ style Base_Widget_MaterialComponents_TextView
 style CardView
 style CardView_Dark
 style CardView_Light
+style EasyPermissions
+style EasyPermissions_Transparent
 style Elastic
 style EmptyTheme
 style Fade
