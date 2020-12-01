@@ -88,6 +88,7 @@ public class MapsActivity extends FragmentActivity implements
     private GeofencingClient geofencingClient;
     private PeriodicWorkRequest periodicWorkRequest;
     private BlurController blurController;
+    private View.OnClickListener addTileOnClickListener;
 
 
     private PermissionManager permissionManager;
@@ -235,22 +236,6 @@ public class MapsActivity extends FragmentActivity implements
         binding.homePager.setCurrentItem(1, true);
     }
 
-    //open the bottom drawer and slide to the edit page
-    public void addButtonClicked(View view)
-    {
-        if (permissionManager == null)
-            permissionManager = new PermissionManager(this, locationPermissions);
-        permissionManager.checkPermission();
-
-        binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        binding.homePager.setCurrentItem(0, true);
-        binding.radiusSlider.setPosition(80f/500);
-        binding.delaySlider.setPosition(0.5f);
-        binding.addName.setText("Location " + (userDataManager.getAdapter().getItemCount() + 1));
-        binding.transitionType.selectButton(R.id.entering);
-        if (blurController != null)
-            blurController.setAddButtonClicked(true);
-    }
 
     public void confirmButtonClicked(View view)
     {
@@ -290,10 +275,9 @@ public class MapsActivity extends FragmentActivity implements
     //launch settings_icon activity
     public void launchSettings(View view)
     {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        binding.blurLayer.disable();
-        binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        startActivity(intent);
+        binding.privacyPolicyPage.setVisibility(View.VISIBLE);
+        binding.drawer.setTouchEnabled(false);
+        binding.addTile.setOnClickListener(v -> {});
     }
 
 
@@ -404,13 +388,22 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onBackPressed()
     {
-        blurController.setFromBackPress(true);
-        if (binding.drawer.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
-            binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (binding.privacyPolicyPage.getVisibility() == View.VISIBLE)
+        {
+            binding.privacyPolicyPage.setVisibility(View.GONE);
+            binding.drawer.setTouchEnabled(true);
+            binding.addTile.setOnClickListener(addTileOnClickListener);
+        }
         else
-            super.onBackPressed();
+        {
+            blurController.setFromBackPress(true);
+            if (binding.drawer.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+                binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            else
+                super.onBackPressed();
 
-        blurController.setFromBackPress(false);
+            blurController.setFromBackPress(false);
+        }
     }
 
     @Override
@@ -642,6 +635,25 @@ public class MapsActivity extends FragmentActivity implements
 
         binding.locationList.setSwipeMenuCreator(menuCreator);
         binding.locationList.setOnItemMenuClickListener(mItemMenuClickListener);
+
+        binding.privacyPolicy.loadUrl("file:///android_asset/privacy_policy.html");
+
+        addTileOnClickListener = v -> {
+            if (permissionManager == null)
+                permissionManager = new PermissionManager(MapsActivity.this, locationPermissions);
+            permissionManager.checkPermission();
+
+            binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            binding.homePager.setCurrentItem(0, true);
+            binding.radiusSlider.setPosition(80f/500);
+            binding.delaySlider.setPosition(0.5f);
+            binding.addName.setText("Location " + (userDataManager.getAdapter().getItemCount() + 1));
+            binding.transitionType.selectButton(R.id.entering);
+            if (blurController != null)
+                blurController.setAddButtonClicked(true);
+        };
+
+        binding.addTile.setOnClickListener(addTileOnClickListener);
     }
 
     //show or hide the confirm button

@@ -192,8 +192,7 @@
                         android:layout_marginVertical="10dp"
                         android:layout_marginHorizontal="10dp"
                         app:cardElevation="5dp"
-                        android:clickable="true"
-                        android:onClick="addButtonClicked">
+                        android:clickable="true">
 
                     <TextView android:layout_width="wrap_content"
                               android:text="@string/confirm_add_location"
@@ -202,7 +201,6 @@
                               android:textAlignment="center"
                               android:layout_height="wrap_content"/>
                 </androidx.cardview.widget.CardView>
-
 
                 <!--right "Menu" button-->
                 <androidx.cardview.widget.CardView
@@ -228,7 +226,6 @@
                               android:layout_height="wrap_content"/>
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             <!--drawer content-->
             <!--hosts everything that will be displayed when the drawer is open (expanded)-->
@@ -413,12 +410,27 @@
 
 
                 <!--open this page when the user clicks "Menu" button-->
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/list_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                <androidx.appcompat.widget.LinearLayoutCompat
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                    <androidx.core.widget.NestedScrollView
+                            android:id="@+id/privacy_policy_page"
+                            android:layout_width="match_parent"
+                            android:translationZ="100dp"
+                            android:visibility="gone"
+                            android:layout_height="match_parent">
+                    <!--display privacy policy-->
+                    <WebView
+                            android:id="@+id/privacy_policy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </androidx.core.widget.NestedScrollView>
 
                     <!--settings_icon-->
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -451,6 +463,8 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <!--ca-app-pub-3940256099942544/6300978111 for testing ad-->
+                    <!--ca-app-pub-2969376446904699/3430756199 for production-->
                     <com.google.android.gms.ads.AdView
                             xmlns:ads="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/adView"
@@ -461,8 +475,7 @@
                             ads:adUnitId="ca-app-pub-2969376446904699/3430756199">
                     </com.google.android.gms.ads.AdView>
 
-                    <!--ca-app-pub-3940256099942544/6300978111 for testing ad-->
-                    <!--ca-app-pub-2969376446904699/3430756199 for production-->
+
                     <!--todo: design idea: add an extra section here to display recommended locations-->
                     <!--todo: add a toggle for each recommendation and user-saved locations to enable/disable routine-->
 
@@ -476,6 +489,7 @@
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.valkriaine.factor.HomePager>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

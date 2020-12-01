@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="warn" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="AutoImportSettings">
@@ -31,10 +31,31 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b5fb97a-6a6f-4d2e-9e02-8cb5c5326290" name="Default Changelist" comment="updated privacy policy">
+    <list default="true" id="6b5fb97a-6a6f-4d2e-9e02-8cb5c5326290" name="Default Changelist" comment="fixed an issue that causes the app the crash when returning from settings screen">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug/R.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug/R.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/dex/debug/mergeProjectDexDebug/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/dex/debug/mergeProjectDexDebug/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/dex_archive_input_jar_hashes/debug/out" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/dex_archive_input_jar_hashes/debug/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/mergeDebugResources/merger.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/androidResources" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/androidResources" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/digitalsmart/mutify/MapsActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/digitalsmart/mutify/MapsActivity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/resources-debug.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/processed_res/debug/out/resources-debug.ap_" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/digitalsmart/mutify/MapsActivity.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/digitalsmart/mutify/MapsActivity.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout_activity_maps.xml.flat" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout_activity_maps.xml.flat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/runtime_symbol_list/debug/R.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/runtime_symbol_list/debug/R.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/digitalsmart/mutify/MapsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/digitalsmart/mutify/MapsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/digitalsmart/mutify/SettingsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/digitalsmart/mutify/SettingsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/digitalsmart/mutify/SettingsActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +246,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606856766485</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fixed an issue that causes the app the crash when returning from settings screen">
+      <created>1606863716649</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1606863716649</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -249,7 +277,8 @@
     <MESSAGE value="implemented banner ad" />
     <MESSAGE value="better implemented permission requests" />
     <MESSAGE value="updated privacy policy" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated privacy policy" />
+    <MESSAGE value="fixed an issue that causes the app the crash when returning from settings screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed an issue that causes the app the crash when returning from settings screen" />
   </component>
   <component name="WindowStateProjectService">
     <state x="291" y="95" key="#Project_Structure" timestamp="1605555770595">
@@ -264,10 +293,10 @@
       <screen x="0" y="0" width="1620" height="1040" />
     </state>
     <state x="121" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1620.1040@0.0.1620.1040" timestamp="1605559720984" />
-    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606778059915">
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606866139747">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606778059915" />
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606866139747" />
     <state x="605" y="311" key="AndroidCreateResourceFileDialog" timestamp="1606776240349">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -285,26 +314,26 @@
     </state>
     <state x="593" y="248" key="FileChooserDialogImpl/0.0.1620.1040@0.0.1620.1040" timestamp="1606784393596" />
     <state x="750" y="265" key="FileChooserDialogImpl/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606852350273" />
-    <state width="2005" height="270" key="GridCell.Tab.0.bottom" timestamp="1606852087151">
+    <state width="1401" height="410" key="GridCell.Tab.0.bottom" timestamp="1606864606557">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state width="1578" height="240" key="GridCell.Tab.0.bottom/0.0.1620.1040@0.0.1620.1040" timestamp="1606844986484" />
-    <state width="2005" height="270" key="GridCell.Tab.0.bottom/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606852087151" />
-    <state width="2005" height="270" key="GridCell.Tab.0.center" timestamp="1606852087151">
+    <state width="1401" height="410" key="GridCell.Tab.0.bottom/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606864606557" />
+    <state width="1401" height="410" key="GridCell.Tab.0.center" timestamp="1606864606557">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state width="1578" height="240" key="GridCell.Tab.0.center/0.0.1620.1040@0.0.1620.1040" timestamp="1606844986483" />
-    <state width="2005" height="270" key="GridCell.Tab.0.center/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606852087151" />
-    <state width="2005" height="270" key="GridCell.Tab.0.left" timestamp="1606852087151">
+    <state width="1401" height="410" key="GridCell.Tab.0.center/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606864606557" />
+    <state width="1401" height="410" key="GridCell.Tab.0.left" timestamp="1606864606557">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state width="1578" height="240" key="GridCell.Tab.0.left/0.0.1620.1040@0.0.1620.1040" timestamp="1606844986483" />
-    <state width="2005" height="270" key="GridCell.Tab.0.left/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606852087151" />
-    <state width="2005" height="270" key="GridCell.Tab.0.right" timestamp="1606852087151">
+    <state width="1401" height="410" key="GridCell.Tab.0.left/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606864606557" />
+    <state width="1401" height="410" key="GridCell.Tab.0.right" timestamp="1606864606557">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state width="1578" height="240" key="GridCell.Tab.0.right/0.0.1620.1040@0.0.1620.1040" timestamp="1606844986484" />
-    <state width="2005" height="270" key="GridCell.Tab.0.right/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606852087151" />
+    <state width="1401" height="410" key="GridCell.Tab.0.right/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606864606557" />
     <state x="391" y="263" key="IDE.errors.dialog" timestamp="1606779047493">
       <screen x="0" y="0" width="1620" height="1040" />
     </state>
@@ -315,11 +344,11 @@
     </state>
     <state x="312" y="165" key="SettingsEditor/0.0.1620.1040@0.0.1620.1040" timestamp="1605560802832" />
     <state x="847" y="255" key="SettingsEditor/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606857634334" />
-    <state x="509" y="271" key="Vcs.Push.Dialog.v2" timestamp="1606856774374">
+    <state x="509" y="271" key="Vcs.Push.Dialog.v2" timestamp="1606863725391">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="403" y="253" key="Vcs.Push.Dialog.v2/0.0.1620.1040@0.0.1620.1040" timestamp="1606845138998" />
-    <state x="509" y="271" key="Vcs.Push.Dialog.v2/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606856774374" />
+    <state x="509" y="271" key="Vcs.Push.Dialog.v2/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606863725391" />
     <state x="947" y="458" key="git4idea.ui.GitTagDialog" timestamp="1606856236212">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>

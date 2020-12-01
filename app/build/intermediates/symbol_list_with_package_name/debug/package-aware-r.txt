@@ -2560,6 +2560,7 @@ id popUp
 id position
 id postLayout
 id privacy_policy
+id privacy_policy_page
 id progress_bar
 id progress_circular
 id progress_horizontal
@@ -2769,7 +2770,6 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_maps
-layout activity_settings
 layout address_balloon_layout
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
