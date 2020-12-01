@@ -295,14 +295,18 @@
     </state>
     <state x="312" y="165" key="SettingsEditor/0.0.1620.1040@0.0.1620.1040" timestamp="1605560802832" />
     <state x="847" y="255" key="SettingsEditor/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606853968596" />
-    <state x="509" y="271" key="Vcs.Push.Dialog.v2" timestamp="1606856165553">
+    <state x="509" y="271" key="Vcs.Push.Dialog.v2" timestamp="1606856529333">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="403" y="253" key="Vcs.Push.Dialog.v2/0.0.1620.1040@0.0.1620.1040" timestamp="1606845138998" />
-    <state x="509" y="271" key="Vcs.Push.Dialog.v2/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606856165553" />
+    <state x="509" y="271" key="Vcs.Push.Dialog.v2/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606856529333" />
     <state x="947" y="458" key="git4idea.ui.GitTagDialog" timestamp="1606856236212">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="947" y="458" key="git4idea.ui.GitTagDialog/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606856236212" />
+    <state x="793" y="379" width="672" height="678" key="search.everywhere.popup" timestamp="1606856411073">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="793" y="379" width="672" height="678" key="search.everywhere.popup/2560.0.1280.687/0.0.2048.1112@0.0.2048.1112" timestamp="1606856411073" />
   </component>
 </project>
