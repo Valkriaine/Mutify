@@ -16,4 +16,7 @@ public class SettingsActivity extends AppCompatActivity
         WebView privacyPolicyWebView = findViewById(R.id.privacy_policy);
         privacyPolicyWebView.loadUrl("file:///android_asset/privacy_policy.html");
     }
+
+
+
 }

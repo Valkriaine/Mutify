@@ -314,20 +314,24 @@ public class MapsActivity extends FragmentActivity implements
     protected void onStart()
     {
         super.onStart();
-        binding.blurLayer.disable();
+        blurController.setFromBackPress(true);
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         if (isDNDAccessRequested())
             new PermissionManager(this, locationPermissions).checkDNDAccess();
+
+        blurController.setFromBackPress(false);
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        binding.blurLayer.disable();
+        blurController.setFromBackPress(true);
         binding.drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         if (isDNDAccessRequested())
             new PermissionManager(this, locationPermissions).checkDNDAccess();
+
+        blurController.setFromBackPress(false);
 
     }
 
