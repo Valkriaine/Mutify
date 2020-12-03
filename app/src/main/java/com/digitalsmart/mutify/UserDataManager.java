@@ -1,11 +1,11 @@
 package com.digitalsmart.mutify;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import com.digitalsmart.mutify.broadcast_receivers.GeofenceBroadcastReceiver;
@@ -30,6 +31,9 @@ import com.google.android.gms.tasks.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import static com.digitalsmart.mutify.util.Constants.NOTIFICATION_ID;
+import static com.digitalsmart.mutify.util.Constants.PACKAGE_NAME;
 
 //ViewModel class for managing user data in a singleton manner
 //create an instance of UserDataManager when app starts
@@ -76,12 +80,25 @@ public class UserDataManager
     public void addFencesAfterReboot(Context context)
     {
         new Thread(() -> locations.addAll(db.userLocationDAO().getAll())).start();
+        createNotificationChannel(context);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PACKAGE_NAME)
+                .setSmallIcon(R.drawable.location_icon)
+                .setContentTitle("Mutify")
+                .setNotificationSilent()
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+
+
         SystemClock.sleep(10000);
         generateFences();
         if (fencesToAdd.size() > 0)
-            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                    .addOnCompleteListener(task -> Toast.makeText(context, "Mutify successfully restored geo fences.", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(exception -> Toast.makeText(context, "Mutify could not restore geo fences.", Toast.LENGTH_SHORT).show());
+            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent(context))
+                    .addOnCompleteListener(task ->
+                            notificationManager.notify(NOTIFICATION_ID, builder.setAutoCancel(true).setContentText("Mutify service restarted").build()))
+                    .addOnFailureListener(exception ->
+                            notificationManager.notify(NOTIFICATION_ID, builder.setContentText("Mutify service failed to start, please open the app to manually register fences").build()));
+
+
     }
 
     //call this method to retrieve the location list from a local file or a database
@@ -101,7 +118,7 @@ public class UserDataManager
         //call generateFences after retrieving all the data (background thread finish)
         generateFences();
         if (fencesToAdd.size() > 0)
-            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent(activity.getApplicationContext()))
                     .addOnFailureListener(e ->
                     {
                         Toast.makeText(activity, "Mutify could not restore geo fences.", Toast.LENGTH_SHORT).show();
@@ -124,12 +141,12 @@ public class UserDataManager
         if (!locations.contains(location))
         {
             fencesToAdd.add(location.getGeofence());
-            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+            geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent(activity.getApplicationContext()))
                     .addOnSuccessListener(activity, v ->
                     {
                         fences.addAll(fencesToAdd);
                         fencesToAdd.clear();
-                        Log.d("fences", "fences added. Fences saved in this session: " + fences.size());
+                        Toast.makeText(activity, location.getName() + " added", Toast.LENGTH_SHORT).show();
 
                         //draw circle and put marker on the map
                         //if geo fence is successfully added
@@ -204,14 +221,14 @@ public class UserDataManager
 
     //methods needed for adding new geo fences, do not call them directly
     //call add() to add new fences
-    private PendingIntent getGeofencePendingIntent()
+    private PendingIntent getGeofencePendingIntent(Context context)
     {
         if (geofencePendingIntent != null)
         {
             return geofencePendingIntent;
         }
-        Intent intent = new Intent(activity.getApplicationContext(), GeofenceBroadcastReceiver.class);
-        geofencePendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, GeofenceBroadcastReceiver.class);
+        geofencePendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
     }
     private GeofencingRequest getGeofencingRequest()
@@ -221,6 +238,24 @@ public class UserDataManager
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .addGeofences(fencesToAdd)
                 .build();
+    }
+
+    private void createNotificationChannel(Context context)
+    {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String description = "Mutify app";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(PACKAGE_NAME, PACKAGE_NAME, importance);
+            channel.setDescription(description);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 

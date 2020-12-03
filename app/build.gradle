@@ -9,10 +9,13 @@ android {
         applicationId "com.digitalsmart.mutify"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         renderscriptTargetApi 30 //must match target sdk and build tools
         renderscriptSupportModeEnabled true
+
+
+
         // Read the API key from ./secure.properties into R.string.maps_api_key
         def secureProps = new Properties()
         if (file("../secure.properties").exists()) {
@@ -30,7 +33,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
