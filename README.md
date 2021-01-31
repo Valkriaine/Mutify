@@ -10,5 +10,4 @@ https://www.youtube.com/playlist?list=PLr2SUHRsQtUcKDNWyCxmTi0O6B96-bdUm
 
 # Get it from Google Play
 
-<a href="https://play.google.com/store/apps/details?id=com.digitalsmart.mutify" >
-<img src="https://raw.githubusercontent.com/Ramotion/react-native-circle-menu/master/google_play@2x.png" width="104" height="34"></a>
+<a href='https://play.google.com/store/apps/details?id=com.digitalsmart.mutify&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='300'/></a>
